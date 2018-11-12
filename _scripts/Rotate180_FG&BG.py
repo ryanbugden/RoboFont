@@ -1,5 +1,5 @@
 # Rotate both "foreground" and "background" 180 degrees
-# Use your preferred shortcut and commonly used background layer name below
+# Use your preferred shortcut and commonly used background layer name below.
 # 2018/11/12
 
 
