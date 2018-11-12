@@ -1,6 +1,7 @@
-# Rotate both "foreground" and "background" 180 degrees.
-# Use your preferred shortcut and commonly used background layer name below.
+# Rotate both "foreground" and "background" 180 degrees
+# Use your preferred shortcut and commonly used background layer name below
 # 2018/11/12
+
 
 # menuTitle: Rotate 180 FG & BG
 # shortCut: shift+command+r
