@@ -1,4 +1,4 @@
-# Rotate both "foreground" and "background" 180 degrees
+# Rotate both "foreground" and "background" 180 degrees.
 # Use your preferred shortcut and commonly used background layer name below.
 # 2018/11/12
 
@@ -20,16 +20,19 @@ def rotate180BothLayers(centerX, centerY):
 
 midpointX = glyph.bounds[0] + (glyph.bounds[2] - glyph.bounds[0]) / 2
 midpointY = glyph.bounds[1] + (glyph.bounds[3] - glyph.bounds[1]) / 2
-      
-character = chr(glyph.unicode)
-if character == character.upper():
-    rotate180BothLayers(glyph.width/2, font.info.capHeight/2)
-    
-elif character == character.lower():
-    rotate180BothLayers(glyph.width/2, font.info.xHeight/2)
-    
-else:
+
+if glyph.unicode == None:
     rotate180BothLayers(midpointX, midpointY)
+
+else:    
+    character = chr(glyph.unicode)
+
+    if character == character.upper():
+        rotate180BothLayers(glyph.width/2, font.info.capHeight/2)
+    
+    elif character == character.lower():
+        rotate180BothLayers(glyph.width/2, font.info.xHeight/2)
+
 
 glyph.performUndo()
 glyph.update()
