@@ -2,7 +2,6 @@
 # Use your preferred shortcut and commonly used background layer name below.
 # 2018/11/12
 
-
 # menuTitle: Rotate 180 FG & BG
 # shortCut: shift+command+r
 
@@ -19,10 +18,8 @@ def rotate180BothLayers(centerX, centerY):
         (centerX,centerY)
         )
 
-print(glyph.bounds)
 midpointX = glyph.bounds[0] + (glyph.bounds[2] - glyph.bounds[0]) / 2
 midpointY = glyph.bounds[1] + (glyph.bounds[3] - glyph.bounds[1]) / 2
-print(midpointX, midpointY)
       
 character = chr(glyph.unicode)
 if character == character.upper():
