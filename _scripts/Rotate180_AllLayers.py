@@ -38,8 +38,6 @@ glyph.prepareUndo("Rotate")
 if glyph.unicode == None:
     if "." in glyph.name:
         glyph_parent_name = glyph.name.split(".")[0]
-        print(glyph_parent_name)
-        print(font[glyph_parent_name].unicode)
         character = chr(font[glyph_parent_name].unicode)
 
         if character == character.upper():
