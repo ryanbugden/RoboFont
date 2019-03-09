@@ -12,6 +12,12 @@ Ryan Bugden
 with thanks to Frank Griesshammer for the idea
 '''
 
+def findRange(l):
+    return max(l) - min(l)
+
+def avgList(l):
+    return int(sum(l) / len(l))
+
 def _adjacentPointsThatAreOffCurve(point_index):
     adjacents = [point_index-1, point_index+1]
     l = []
@@ -31,11 +37,11 @@ if g.selection:
         x_ind.append(p.x)
         y_ind.append(p.y)
     # Find the width of the selection and height of the selection
-    x_diff = max(x_ind) - min(x_ind)
-    y_diff = max(y_ind) - min(y_ind)
+    x_diff = findRange(x_ind)
+    y_diff = findRange(y_ind)
     # Average each of the lists
-    av_x_ind = int(sum(x_ind) / len(x_ind))
-    av_y_ind = int(sum(y_ind) / len(y_ind))
+    av_x_ind = avgList(x_ind)
+    av_y_ind = avgList(y_ind)
     # If the points are closer together horizontally, align x.
     if x_diff < y_diff:
         for p in g.selection:
