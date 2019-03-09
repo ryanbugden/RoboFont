@@ -7,7 +7,9 @@ It does its best to rotate it in a helpful way, not
 necessarily just around the body of the contours themselves.
 Use your preferred shortcut in line 2.
 
-Last updated: 2018/12/13
+Ryan Bugden
+2018.11.12
+Updated: 2018.12.13
 '''
 
 font = CurrentFont()
