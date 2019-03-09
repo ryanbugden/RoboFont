@@ -39,21 +39,39 @@ if g.selection:
         for p in g.selection:
             x_ind.append(p.x)
             y_ind.append(p.y)
+        av_x = avgList(x_ind)
+        av_y = avgList(y_ind)
+        # Threshold to determine whether to move off-curves drastically or not.
+        ocp_dist_threshold = 5
         # If the points are closer together horizontally, align x.
         if findRange(x_ind) < findRange(y_ind):
             for p in g.selection:
+                x_delta = av_x - p.x 
                 p_i = p._get_index()
-                p.x = avgList(x_ind)
+                p.x = av_x
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
-                    p.contour.points[ocp_i].x = avgList(x_ind)
+                    if p.contour.points[p_i].x + ocp_dist_threshold > p.contour.points[ocp_i].x > p.contour.points[p_i].x - ocp_dist_threshold:
+                        p.contour.points[ocp_i].x = av_x
+                    elif p.smooth == True and p.contour.points[ocp_i].y > p.y:
+                        p.contour.points[ocp_i].x = av_x
+                    else:
+                        p.contour.points[ocp_i].x += x_delta
         # If the points are closer together vertically, align y.
         else:
             for p in g.selection:
+                y_delta = av_y - p.y
                 p_i = p._get_index()
-                p.y = avgList(y_ind)
+                p.y = av_y
+                # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
-                    p.contour.points[ocp_i].y = avgList(y_ind)
+                    if p.contour.points[p_i].y + ocp_dist_threshold > p.contour.points[ocp_i].y > p.contour.points[p_i].y - ocp_dist_threshold:
+                        p.contour.points[ocp_i].y = av_y
+                    elif p.smooth == True and p.contour.points[ocp_i].x > p.x:
+                        p.contour.points[ocp_i].y = av_y
+                    else:
+                        p.contour.points[ocp_i].y += y_delta
         # Immediately reflect the changes in glyph view.
         g.update()
+        
     
