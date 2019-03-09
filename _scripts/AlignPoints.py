@@ -24,6 +24,10 @@ def _adjacentPointsThatAreOffCurve(point_index):
     adjacents = [point_index-1, point_index+1]
     l = []
     for pt_i in adjacents:
+        try: 
+            p.contour._getPoint(pt_i)
+        except IndexError:
+            continue
         if p.contour.points[pt_i].type == 'offcurve':
             l.append(pt_i)
     return l
