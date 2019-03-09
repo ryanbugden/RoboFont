@@ -24,6 +24,7 @@ def _adjacentPointsThatAreOffCurve(point_index):
     adjacents = [point_index-1, point_index+1]
     l = []
     for pt_i in adjacents:
+        # Will avoid errors with first/last point indexes
         try: 
             p.contour._getPoint(pt_i)
         except IndexError:
@@ -46,7 +47,7 @@ if g.selection:
         av_x = avgList(x_ind)
         av_y = avgList(y_ind)
         # Threshold to determine whether to move off-curves drastically or not.
-        ocp_dist_threshold = 5
+        ocp_dist_threshold = 15
         # If the points are closer together horizontally, align x.
         if findRange(x_ind) < findRange(y_ind):
             for p in g.selection:
@@ -55,13 +56,16 @@ if g.selection:
                 p.x = av_x
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
+                    # If the point is close enough, it will snap to the alignment average.
                     if p.contour.points[p_i].x + ocp_dist_threshold > p.contour.points[ocp_i].x > p.contour.points[p_i].x - ocp_dist_threshold:
                         p.contour.points[ocp_i].x = av_x
+                    # If it's a smooth point and the handle isn't parallel to the alignment direction, the off-curve will snap to the alignment average.
                     elif p.smooth == True and p.contour.points[ocp_i].y > p.y:
                         p.contour.points[ocp_i].x = av_x
+                    # Otherwise, the off-curve-to-on-curve relationship will be maintained
                     else:
                         p.contour.points[ocp_i].x += x_delta
-        # If the points are closer together vertically, align y.
+        # Same for y
         else:
             for p in g.selection:
                 y_delta = av_y - p.y
