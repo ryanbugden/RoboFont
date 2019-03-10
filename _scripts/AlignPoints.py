@@ -5,7 +5,9 @@
 This script aligns selected points intelligently. 
 It will look at the x-coordinate offset and 
 the y-coordinate offset and align according to 
-whichever one is smaller.
+whichever one is smaller. It will also make 
+an educated guess as to which direction you'd 
+like to align it.
 
 Ryan Bugden
 2019.03.09
@@ -44,39 +46,69 @@ if g.selection:
         for p in g.selection:
             x_ind.append(p.x)
             y_ind.append(p.y)
+            
         av_x = avgList(x_ind)
+        max_x = max(x_ind)
+        min_x = min(x_ind)
+        
         av_y = avgList(y_ind)
+        max_y = max(y_ind)
+        min_y = min(y_ind)
+        
         # Threshold to determine whether to move off-curves drastically or not.
-        ocp_dist_threshold = 15
+        ocp_dist_threshold = 20
         # If the points are closer together horizontally, align x.
         if findRange(x_ind) < findRange(y_ind):
-            for p in g.selection:
-                x_delta = av_x - p.x 
+            for p in g.selection: 
                 p_i = p._get_index()
-                p.x = av_x
+                
+                # Set appropriate alignment. Tries to intuit whether you want to align left, right, or center.
+                if max_x == g.bounds[2]:
+                    alignment_x = max_x
+                elif min_x == g.bounds[0]:
+                    alignment_x = min_x
+                else:
+                    alignment_x = av_x
+                    
+                p.x = alignment_x
+                x_delta = alignment_x - p.x
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
                     # If the point is close enough, it will snap to the alignment average.
                     if p.contour.points[p_i].x + ocp_dist_threshold > p.contour.points[ocp_i].x > p.contour.points[p_i].x - ocp_dist_threshold:
-                        p.contour.points[ocp_i].x = av_x
+                        p.contour.points[ocp_i].x = alignment_x
                     # If it's a smooth point and the handle isn't parallel to the alignment direction, the off-curve will snap to the alignment average.
-                    elif p.smooth == True and p.contour.points[ocp_i].y > p.y:
-                        p.contour.points[ocp_i].x = av_x
+                    elif p.smooth == True and p.contour.points[ocp_i].y < p.y - ocp_dist_threshold:
+                        p.contour.points[ocp_i].x = alignment_x
+                    elif p.smooth == True and p.contour.points[ocp_i].y > p.y + ocp_dist_threshold:
+                        p.contour.points[ocp_i].x = alignment_x
                     # Otherwise, the off-curve-to-on-curve relationship will be maintained
                     else:
                         p.contour.points[ocp_i].x += x_delta
         # Same for y
         else:
             for p in g.selection:
-                y_delta = av_y - p.y
                 p_i = p._get_index()
-                p.y = av_y
+                
+                # Set appropriate alignment. Tries to intuit whether you want to align left, right, or center.
+                if max_y == g.bounds[3]:
+                    alignment_y = max_y
+                elif min_y == g.bounds[1]:
+                    alignment_y = min_y
+                else:
+                    alignment_y = av_y
+                    
+                p.y = alignment_y
+                y_delta = alignment_y - p.y
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
+                    print(ocp_i)
                     if p.contour.points[p_i].y + ocp_dist_threshold > p.contour.points[ocp_i].y > p.contour.points[p_i].y - ocp_dist_threshold:
-                        p.contour.points[ocp_i].y = av_y
-                    elif p.smooth == True and p.contour.points[ocp_i].x > p.x:
-                        p.contour.points[ocp_i].y = av_y
+                        p.contour.points[ocp_i].y = alignment_y
+                    elif p.smooth == True and p.contour.points[ocp_i].x < p.x - ocp_dist_threshold:
+                        p.contour.points[ocp_i].y = alignment_y
+                    elif p.smooth == True and p.contour.points[ocp_i].x > p.x + ocp_dist_threshold:
+                        p.contour.points[ocp_i].y = alignment_y
                     else:
                         p.contour.points[ocp_i].y += y_delta
         # Immediately reflect the changes in glyph view.
