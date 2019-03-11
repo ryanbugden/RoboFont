@@ -109,16 +109,13 @@ if g.selection:
                     print(ocp_i)
                     if p.contour.points[p_i].y + ocp_dist_threshold > p.contour.points[ocp_i].y > p.contour.points[p_i].y - ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
-                        print("scenario 1")
                     elif p.smooth == True and p.contour.points[ocp_i].x < p.x - ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
-                        print("scenario 2")
                     elif p.smooth == True and p.contour.points[ocp_i].x > p.x + ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
-                        print("scenario 3")
                     else:
                         p.contour.points[ocp_i].y += y_delta
-                        print("scenario 4")
+                        
         # Immediately reflect the changes in glyph view.
         g.update()
         
