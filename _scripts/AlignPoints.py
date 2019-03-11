@@ -9,6 +9,8 @@ whichever one is smaller. It will also make
 an educated guess as to which direction you'd 
 like to align it.
 
+Requires Robofont 3.2+
+
 Ryan Bugden
 2019.03.09
 with thanks to Frank Griesshammer for the idea
@@ -56,7 +58,7 @@ if g.selection:
         min_y = min(y_ind)
         
         # Threshold to determine whether to move off-curves drastically or not.
-        ocp_dist_threshold = 20
+        ocp_dist_threshold = 1
         # If the points are closer together horizontally, align x.
         if findRange(x_ind) < findRange(y_ind):
             for p in g.selection: 
@@ -70,8 +72,9 @@ if g.selection:
                 else:
                     alignment_x = av_x
                     
-                p.x = alignment_x
                 x_delta = alignment_x - p.x
+                p.x = alignment_x
+                
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
                     # If the point is close enough, it will snap to the alignment average.
@@ -97,20 +100,25 @@ if g.selection:
                     alignment_y = min_y
                 else:
                     alignment_y = av_y
-                    
+                   
+                y_delta = alignment_y - p.y    
                 p.y = alignment_y
-                y_delta = alignment_y - p.y
+                
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
                     print(ocp_i)
                     if p.contour.points[p_i].y + ocp_dist_threshold > p.contour.points[ocp_i].y > p.contour.points[p_i].y - ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
+                        print("scenario 1")
                     elif p.smooth == True and p.contour.points[ocp_i].x < p.x - ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
+                        print("scenario 2")
                     elif p.smooth == True and p.contour.points[ocp_i].x > p.x + ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
+                        print("scenario 3")
                     else:
                         p.contour.points[ocp_i].y += y_delta
+                        print("scenario 4")
         # Immediately reflect the changes in glyph view.
         g.update()
         
