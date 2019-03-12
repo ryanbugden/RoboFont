@@ -106,7 +106,6 @@ if g.selection:
                 
                 # Don't forget off-curves
                 for ocp_i in _adjacentPointsThatAreOffCurve(p_i):
-                    print(ocp_i)
                     if p.contour.points[p_i].y + ocp_dist_threshold > p.contour.points[ocp_i].y > p.contour.points[p_i].y - ocp_dist_threshold:
                         p.contour.points[ocp_i].y = alignment_y
                     elif p.smooth == True and p.contour.points[ocp_i].x < p.x - ocp_dist_threshold:
