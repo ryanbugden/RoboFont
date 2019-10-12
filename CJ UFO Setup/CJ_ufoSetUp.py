@@ -1,3 +1,5 @@
+# menuTitle: CJ - UFO Setup - 600
+
 '''
 Open an empty UFO and run this script to begin setting up a basic font with Chinese and Japanese ideographs in Robofont.
 To add more glyphs to what will be generated, change the "hanzi" and "kanji" lists.
