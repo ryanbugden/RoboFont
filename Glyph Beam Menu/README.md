@@ -8,4 +8,4 @@ The guide will...
 
 This is a script currently meant to be implemented as a [start-up script](https://robofont.com/documentation/how-tos/setting-up-a-startup-script/?highlight=start-up). 
 
-![](./glyphBeamMenu_screenshot.png)
+![](./glyphBeamMenu_screenshot_2.png)
