@@ -1,7 +1,7 @@
 # Glyph Beam Menu
 This gives you a drop-down menu in the Glyph View that enables you to toggle a "beam" (guide showing measurements) in the Glyph View at mid- x-height or cap-height.
 
-The guide will...<br>
+The guide will...
 * show measurements.
 * be the same color as your Space Center beam.
 * return to its destined position when toggled.
