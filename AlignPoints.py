@@ -116,6 +116,6 @@ if g.selection:
                         p.contour.points[ocp_i].y += y_delta
                         
         # Immediately reflect the changes in glyph view.
-        g.update()
+        g.changed()
         
     
