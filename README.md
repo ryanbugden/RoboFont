@@ -1,2 +1,2 @@
-# Robofont
-A collection of Robofont scripts and extensions
+# RoboFont
+A collection of RoboFont scripts and extensions
