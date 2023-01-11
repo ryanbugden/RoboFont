@@ -1,51 +1,57 @@
 # menuTitle : Clear Inspector Panels
 
+from mojo.subscriber import Subscriber, registerRoboFontSubscriber
+
+
 '''
 Choose which Inspector panels you'd like to hide.
 Customize below and add as a start-up script.
 
 Ryan Bugden
 2019.03.30
+2022.02.01
+2023.01.11 Rewritten with Subscribers
 '''
 
-# Set what you want hidden as False:
+# Set visibility of each panel
 panels = {
     'Glyph'      :  True,
     'Preview'    :  False,
     'Layers'     :  True,
     'Transform'  :  True,
-    'Points'     :  False,
+    'Points'     :  True, # Note: setting this to False may cause slowness.
     'Components' :  True,
     'Anchors'    :  True,
-    'Note'       :  False
+    'Note'       :  False,
+    'Guidelines' :  False
     }
     
     
 # ================================================
     
-from mojo.events import addObserver
 
-class ClearInspectorPanels:
+class ClearInspectorPanels(Subscriber):
     
-    def __init__(self):
-        addObserver(self, "inspectorWindowWillShowDescriptions", "inspectorWindowWillShowDescriptions")
+    def build(self):
+        pass
 
-    def inspectorWindowWillShowDescriptions(self, notification):
+    def roboFontWantsInspectorViews(self, info):
         
-        print('You’re now opening Inspector along with a script that clears some of its panels:')
-        print('********************')
+        # print('\nYou’re now opening Inspector along with a script that clears some of its panels:')
+        # print('********************')
+        
+        descs = info['viewDescriptions']
         
         false_keys = []
         for key in panels.keys():
             if panels[key] == False:
                 false_keys.append(key)
                 
-        for i in reversed(range(len(notification["descriptions"]))):
-            if notification["descriptions"][i]['label'] in false_keys:
-                false_title = notification["descriptions"][i]['label']
-                del notification["descriptions"][i]
-                print('Cleared %s from the Inspector panel' % false_title)
-                print('')
+        for i in reversed(range(len(descs))):
+            if descs[i]['label'] in false_keys:
+                false_title = descs[i]['label']
+                del descs[i]
+                # print('Cleared %s from the Inspector panel' % false_title)
     
     
-ClearInspectorPanels()
+registerRoboFontSubscriber(ClearInspectorPanels)
