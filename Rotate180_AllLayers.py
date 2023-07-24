@@ -13,13 +13,19 @@ Ryan Bugden
 2018.11.12
 '''
 
+import math
+
 f = CurrentFont()
 g = CurrentGlyph()
 
 # list of layers in the font
 layers = f._get_layerOrder()
 
-
+try:
+    italic_offset = f.lib['com.typemytype.robofont.italicSlantOffset']
+except:
+    italic_offset = 0
+    
 # function that rotates all layers 180 around a given center point
 def rotate180AllLayers(centerX, centerY):
 	
@@ -46,7 +52,24 @@ def rotate180AllLayers(centerX, centerY):
 				(centerX,centerY)
 				)
 
-# finding a midpoint for the glyph
+# account for italics
+def getXOffset(case="lower"):
+    iv = f.info.italicAngle
+    if iv == None:
+        iv = 0
+    
+    h = f.info.xHeight / 2
+    if case == 'upper':
+        h = f.info.capHeight / 2
+        
+    # convert degrees to radians in the process
+    adjust = math.tan(-iv * math.pi/180) * (h)
+    adjust += italic_offset
+    
+    return adjust
+    
+
+# find a simple midpoint for the glyph. save for later
 midpointX = g.bounds[0] + (g.bounds[2] - g.bounds[0]) / 2
 midpointY = g.bounds[1] + (g.bounds[3] - g.bounds[1]) / 2
 
@@ -59,10 +82,10 @@ with g.undo("Rotate All Layers"):
 				character = chr(f[g_parent_name].unicode)
 
 				if character == character.upper():
-					rotate180AllLayers(g.width/2, f.info.capHeight/2)
+					rotate180AllLayers(g.width/2 + getXOffset('upper'), f.info.capHeight/2)
 		
 				elif character == character.lower():
-					rotate180AllLayers(g.width/2, f.info.xHeight/2)
+					rotate180AllLayers(g.width/2 + getXOffset('lower'), f.info.xHeight/2)
 			else:
 				rotate180AllLayers(midpointX, midpointY)
 			
@@ -70,10 +93,10 @@ with g.undo("Rotate All Layers"):
 		elif g.getLayer('foreground').unicode != None:
 			character = chr(g.getLayer('foreground').unicode)
 			if character == character.upper():
-				rotate180AllLayers(g.width/2, f.info.capHeight/2)
+				rotate180AllLayers(g.width/2  + getXOffset('upper'), f.info.capHeight/2)
 	
 			elif character == character.lower():
-				rotate180AllLayers(g.width/2, f.info.xHeight/2)
+				rotate180AllLayers(g.width/2  + getXOffset('lower'), f.info.xHeight/2)
 		# a catch-all        
 		else:
 			rotate180AllLayers(midpointX, midpointY)
@@ -84,9 +107,9 @@ with g.undo("Rotate All Layers"):
 		character = chr(g.unicode)
 
 		if character == character.upper():
-			rotate180AllLayers(g.width/2, f.info.capHeight/2)
+			rotate180AllLayers(g.width/2  + getXOffset('upper'), f.info.capHeight/2)
 	
 		elif character == character.lower():
-			rotate180AllLayers(g.width/2, f.info.xHeight/2)
+			rotate180AllLayers(g.width/2  + getXOffset('lower'), f.info.xHeight/2)
 
 	g.changed()
