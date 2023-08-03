@@ -5,5 +5,5 @@ The code is basically [Erik van Blokland](http://letterror.com/)’s useful [`co
 
 This is a script currently meant to be implemented as a [start-up script](https://robofont.com/documentation/how-tos/setting-up-a-startup-script/?highlight=start-up).
 
-![](./copyNamesMenu_screenshot.png)
+![](./menu-copy_names-screenshot.png)
 
